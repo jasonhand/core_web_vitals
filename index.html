@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Web Vitals - Interactive Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #632CA6 0%, #8E44AD 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 5px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 180px;
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 45px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #632CA6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #632CA6;
+            padding-bottom: 10px;
+        }
+
+        .definition-box {
+            background: linear-gradient(135deg, #632CA6 0%, #8E44AD 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .score-card {
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .good-score { background: #48bb78; }
+        .needs-improvement { background: #ed8936; }
+        .poor-score { background: #f56565; }
+
+        .score-value {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Interactive Visualization */
+        .visualization-container {
+            background: #1a202c;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            color: white;
+        }
+
+        .browser-mockup {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .browser-bar {
+            background: #4a5568;
+            height: 30px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #f56565; }
+        .dot.yellow { background: #ed8936; }
+        .dot.green { background: #48bb78; }
+
+        .url-bar {
+            background: #1a202c;
+            margin-left: 20px;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            flex: 1;
+        }
+
+        .page-content {
+            background: white;
+            color: #333;
+            min-height: 300px;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-element {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .content-element.rendered {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mock-header {
+            height: 60px;
+            background: #632CA6;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .mock-text {
+            height: 20px;
+            background: #e2e8f0;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+
+        .mock-image {
+            width: 150px;
+            height: 100px;
+            background: #a0aec0;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #632CA6, #8E44AD);
+            margin: 15px 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .timeline {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #2d3748;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .timeline-item {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .timeline-item.active {
+            background: #632CA6;
+            transform: scale(1.05);
+        }
+
+        .timeline-item.completed {
+            background: #48bb78;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: #632CA6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #8E44AD;
+            transform: translateY(-2px);
+        }
+
+        .metric-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f56565;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .metric-indicator.show {
+            opacity: 1;
+            background: #48bb78;
+        }
+
+        /* CLS Demo Styles */
+        .cls-demo {
+            position: relative;
+            height: 400px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cls-content {
+            padding: 20px;
+        }
+
+        .cls-ad {
+            width: 300px;
+            height: 150px;
+            background: #ed8936;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 20px auto;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease;
+        }
+
+        .cls-ad.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .cls-text {
+            height: 15px;
+            background: #e2e8f0;
+            margin: 10px 0;
+            border-radius: 3px;
+            transition: transform 0.3s ease;
+        }
+
+        .cls-text.shifted {
+            transform: translateY(160px);
+        }
+
+        /* INP Demo Styles */
+        .inp-demo {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .inp-button {
+            background: #632CA6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .inp-button:hover {
+            background: #8E44AD;
+        }
+
+        .inp-button.processing {
+            background: #ed8936;
+            pointer-events: none;
+        }
+
+        .inp-feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f7fafc;
+            min-height: 50px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tip-card {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #632CA6;
+        }
+
+        .tip-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .measurement-code {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: #68d391;
+        }
+
+        .code-string {
+            color: #f093fb;
+        }
+
+        .code-keyword {
+            color: #63b3ed;
+        }
+
+        /* Datadog Section */
+        .datadog-section {
+            background: linear-gradient(135deg, #632CA6 0%, #8E44AD 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .datadog-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .datadog-btn {
+            background: white;
+            color: #632CA6;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .datadog-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tab {
+                min-width: 140px;
+                font-size: 12px;
+                padding: 12px 15px;
+            }
+
+            .timeline-item {
+                min-width: 100px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Core Web Vitals</h1>
+            <p>Interactive Guide to Google's Performance Metrics</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('overview', this)">Overview</button>
+            <button class="nav-tab" onclick="showTab('fcp', this)">First Contentful Paint</button>
+            <button class="nav-tab" onclick="showTab('lcp', this)">Largest Contentful Paint</button>
+            <button class="nav-tab" onclick="showTab('inp', this)">Interaction to Next Paint</button>
+            <button class="nav-tab" onclick="showTab('cls', this)">Cumulative Layout Shift</button>
+            <button class="nav-tab" onclick="showTab('monitoring', this)">Monitoring</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div class="content-section active" id="overview">
+            <h2 class="section-title">Core Web Vitals Overview</h2>
+            <div class="definition-box">
+                Core Web Vitals are a set of specific factors that Google considers important in a webpage's overall user experience. They are made up of three specific page speed and user interaction measurements: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS).
+            </div>
+            
+            <div class="score-grid">
+                <div class="tip-card">
+                    <h3>🚀 Loading Performance</h3>
+                    <p><strong>Largest Contentful Paint (LCP)</strong> measures loading performance. Good LCP scores occur within 2.5 seconds of when the page first starts loading.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>⚡ Interactivity</h3>
+                    <p><strong>Interaction to Next Paint (INP)</strong> measures interactivity. Pages should have an INP of 200 milliseconds or less for good user experience.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>🎯 Visual Stability</h3>
+                    <p><strong>Cumulative Layout Shift (CLS)</strong> measures visual stability. Pages should maintain a CLS of 0.1 or less to avoid unexpected layout shifts.</p>
+                </div>
+            </div>
+
+            <p>These metrics focus on three core aspects of user experience and provide actionable guidance on optimizing for better performance. To ensure you're hitting the recommended targets, measure at the 75th percentile of page loads across mobile and desktop devices.</p>
+        </div>
+
+        <!-- First Contentful Paint Tab -->
+        <div class="content-section" id="fcp">
+            <h2 class="section-title">First Contentful Paint (FCP)</h2>
+            <div class="definition-box">
+                First Contentful Paint (FCP) measures the time from when the user first navigated to the page to when any part of the page's content is rendered on the screen. For this metric, "content" refers to text, images (including background images), SVG elements, or non-white canvas elements.
+            </div>
+
+            <div class="score-grid">
+                <div class="score-card good-score">
+                    <div class="score-value">≤ 1.8s</div>
+                    <div>Good</div>
+                </div>
+                <div class="score-card needs-improvement">
+                    <div class="score-value">1.8s - 3.0s</div>
+                    <div>Needs Improvement</div>
+                </div>
+                <div class="score-card poor-score">
+                    <div class="score-value">> 3.0s</div>
+                    <div>Poor</div>
+                </div>
+            </div>
+
+            <div class="visualization-container">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="url-bar">https://example-website.com</div>
+                    </div>
+                    <div class="page-content" id="fcpPageContent">
+                        <div class="metric-indicator" id="fcpIndicator">FCP Achieved!</div>
+                        <div class="content-element" id="fcpHeader">
+                            <div class="mock-header">Welcome to Our Website</div>
+                        </div>
+                        <div class="content-element" id="fcpText1">
+                            <div class="mock-text"></div>
+                        </div>
+                        <div class="content-element" id="fcpText2">
+                            <div class="mock-text"></div>
+                        </div>
+                        <div class="content-element" id="fcpImage">
+                            <div class="mock-image">Image</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline" id="fcpTimeline">
+                    <div class="timeline-item" id="fcpStep0">Navigation Start</div>
+                    <div class="timeline-item" id="fcpStep1">DNS Lookup</div>
+                    <div class="timeline-item" id="fcpStep2">Server Response</div>
+                    <div class="timeline-item" id="fcpStep3">Parse HTML</div>
+                    <div class="timeline-item" id="fcpStep4">FCP - First Content</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" onclick="startFCPAnimation()">Start FCP Demo</button>
+                    <button class="btn" onclick="resetFCPAnimation()">Reset</button>
+                </div>
+
+                <div style="text-align: center; color: #a0aec0; margin-top: 15px;">
+                    <span id="fcpTimer">Time: 0.0s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Largest Contentful Paint Tab -->
+        <div class="content-section" id="lcp">
+            <h2 class="section-title">Largest Contentful Paint (LCP)</h2>
+            <div class="definition-box">
+                Largest Contentful Paint (LCP) measures the time from when the user first navigated to the page to when the largest content element in the viewport is rendered. This could be a large text block, video, or hero image.
+            </div>
+
+            <div class="score-grid">
+                <div class="score-card good-score">
+                    <div class="score-value">≤ 2.5s</div>
+                    <div>Good</div>
+                </div>
+                <div class="score-card needs-improvement">
+                    <div class="score-value">2.5s - 4.0s</div>
+                    <div>Needs Improvement</div>
+                </div>
+                <div class="score-card poor-score">
+                    <div class="score-value">> 4.0s</div>
+                    <div>Poor</div>
+                </div>
+            </div>
+
+            <div class="visualization-container">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="url-bar">https://example-website.com</div>
+                    </div>
+                    <div class="page-content" id="lcpPageContent">
+                        <div class="metric-indicator" id="lcpIndicator">LCP Achieved!</div>
+                        <div class="content-element" id="lcpHeader">
+                            <div class="mock-header">News Website</div>
+                        </div>
+                        <div class="content-element" id="lcpSmallText1">
+                            <div class="mock-text"></div>
+                        </div>
+                        <div class="content-element" id="lcpSmallText2">
+                            <div class="mock-text"></div>
+                        </div>
+                        <div class="content-element" id="lcpHeroImage">
+                            <div class="hero-image">Hero Image (Largest Element)</div>
+                        </div>
+                        <div class="content-element" id="lcpSmallImage">
+                            <div class="mock-image">Small Image</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline" id="lcpTimeline">
+                    <div class="timeline-item" id="lcpStep0">Navigation Start</div>
+                    <div class="timeline-item" id="lcpStep1">FCP - Small Content</div>
+                    <div class="timeline-item" id="lcpStep2">Loading Hero Image</div>
+                    <div class="timeline-item" id="lcpStep3">LCP - Hero Rendered</div>
+                    <div class="timeline-item" id="lcpStep4">Additional Content</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" onclick="startLCPAnimation()">Start LCP Demo</button>
+                    <button class="btn" onclick="resetLCPAnimation()">Reset</button>
+                </div>
+
+                <div style="text-align: center; color: #a0aec0; margin-top: 15px;">
+                    <span id="lcpTimer">Time: 0.0s</span>
+                </div>
+            </div>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3>🖼️ Optimize Hero Images</h3>
+                    <p>Use modern image formats (WebP, AVIF), implement lazy loading for below-the-fold content, and preload critical images.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>📦 Reduce Resource Load Times</h3>
+                    <p>Minimize server response times, eliminate render-blocking resources, and use a CDN for faster asset delivery.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interaction to Next Paint Tab -->
+        <div class="content-section" id="inp">
+            <h2 class="section-title">Interaction to Next Paint (INP)</h2>
+            <div class="definition-box">
+                Interaction to Next Paint (INP) measures the longest duration between a user's interaction with the page and the next paint. It assesses the overall responsiveness of a page to user interactions throughout the page lifecycle.
+            </div>
+
+            <div class="score-grid">
+                <div class="score-card good-score">
+                    <div class="score-value">≤ 200ms</div>
+                    <div>Good</div>
+                </div>
+                <div class="score-card needs-improvement">
+                    <div class="score-value">200ms - 500ms</div>
+                    <div>Needs Improvement</div>
+                </div>
+                <div class="score-card poor-score">
+                    <div class="score-value">> 500ms</div>
+                    <div>Poor</div>
+                </div>
+            </div>
+
+            <div class="visualization-container">
+                <h3 style="color: white; margin-bottom: 20px;">Interactive Responsiveness Demo</h3>
+                <div class="inp-demo">
+                    <p style="margin-bottom: 20px;">Click the buttons below to test different response times:</p>
+                    
+                    <button class="inp-button" onclick="simulateINP(100, this)">Fast Response (100ms)</button>
+                    <button class="inp-button" onclick="simulateINP(300, this)">Medium Response (300ms)</button>
+                    <button class="inp-button" onclick="simulateINP(600, this)">Slow Response (600ms)</button>
+                    
+                    <div class="inp-feedback" id="inpFeedback">
+                        Click a button above to test interaction responsiveness...
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #f0f4ff; border-radius: 8px;">
+                        <strong>INP Measurement:</strong> <span id="inpMeasurement">No interactions yet</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3>⚡ Optimize JavaScript</h3>
+                    <p>Break up long tasks, use web workers for heavy computations, and minimize main thread blocking.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>🎯 Prioritize Critical Interactions</h3>
+                    <p>Ensure key user interactions (buttons, forms, navigation) respond quickly. Defer non-critical processing.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>📱 Optimize for Mobile</h3>
+                    <p>Mobile devices have less processing power. Test and optimize specifically for mobile performance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cumulative Layout Shift Tab -->
+        <div class="content-section" id="cls">
+            <h2 class="section-title">Cumulative Layout Shift (CLS)</h2>
+            <div class="definition-box">
+                Cumulative Layout Shift (CLS) measures the sum total of all individual layout shift scores for every unexpected layout shift that occurs during the entire lifespan of a page. A layout shift occurs any time a visible element changes its position from one rendered frame to the next.
+            </div>
+
+            <div class="score-grid">
+                <div class="score-card good-score">
+                    <div class="score-value">≤ 0.1</div>
+                    <div>Good</div>
+                </div>
+                <div class="score-card needs-improvement">
+                    <div class="score-value">0.1 - 0.25</div>
+                    <div>Needs Improvement</div>
+                </div>
+                <div class="score-card poor-score">
+                    <div class="score-value">> 0.25</div>
+                    <div>Poor</div>
+                </div>
+            </div>
+
+            <div class="visualization-container">
+                <h3 style="color: white; margin-bottom: 20px;">Layout Shift Demonstration</h3>
+                <div class="cls-demo">
+                    <div class="cls-content">
+                        <div class="cls-text"></div>
+                        <div class="cls-text"></div>
+                        <div class="cls-text"></div>
+                        <div class="cls-ad" id="clsAd">Advertisement Loading...</div>
+                        <div class="cls-text" id="clsShiftedText1"></div>
+                        <div class="cls-text" id="clsShiftedText2"></div>
+                        <div class="cls-text" id="clsShiftedText3"></div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" onclick="demonstrateCLS()">Demonstrate Layout Shift</button>
+                    <button class="btn" onclick="resetCLS()">Reset</button>
+                </div>
+
+                <div style="text-align: center; color: #a0aec0; margin-top: 15px;">
+                    <span id="clsScore">CLS Score: 0.0</span>
+                </div>
+            </div>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3>📐 Reserve Space for Dynamic Content</h3>
+                    <p>Always include size attributes on images and videos, and reserve space for ads, embeds, and dynamic content.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>🎨 Avoid Inserting Content Above Existing Content</h3>
+                    <p>Unless it's in response to user interaction, avoid adding content above existing content that pushes it down.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>⚡ Use CSS Transform</h3>
+                    <p>Prefer transform animations to animations that trigger layout changes. Use transform and opacity for smooth animations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoring Tab -->
+        <div class="content-section" id="monitoring">
+            <h2 class="section-title">Measuring Core Web Vitals</h2>
+            
+            <div class="measurement-code">
+<span class="code-comment">// Using Web Vitals library (recommended)</span>
+<span class="code-keyword">import</span> {onCLS, onINP, onLCP, onFCP} <span class="code-keyword">from</span> <span class="code-string">'web-vitals'</span>;
+
+<span class="code-keyword">function</span> sendToAnalytics(metric) {
+  <span class="code-keyword">const</span> body = JSON.stringify(metric);
+  <span class="code-comment">// Use navigator.sendBeacon() if available</span>
+  (navigator.sendBeacon && navigator.sendBeacon(<span class="code-string">'/analytics'</span>, body)) ||
+  fetch(<span class="code-string">'/analytics'</span>, {body, method: <span class="code-string">'POST'</span>, keepalive: <span class="code-keyword">true</span>});
+}
+
+<span class="code-comment">// Measure all Core Web Vitals</span>
+onFCP(sendToAnalytics);
+onLCP(sendToAnalytics);
+onINP(sendToAnalytics);
+onCLS(sendToAnalytics);
+            </div>
+
+            <div class="datadog-section">
+                <div class="datadog-logo">🐕 Datadog Real User Monitoring</div>
+                <p style="font-size: 1.1rem; margin-bottom: 30px;">
+                    Get comprehensive Core Web Vitals monitoring out of the box with Datadog RUM. 
+                    Track FCP, LCP, INP, CLS, and more with real user data from your production applications.
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0; text-align: left;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">📊 Automatic Collection</h3>
+                        <p>Datadog RUM automatically collects all Core Web Vitals metrics without additional configuration.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">🎯 Element Identification</h3>
+                        <p>Identifies which specific elements triggered high LCP, INP, or CLS scores for faster debugging.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">📈 Performance Dashboards</h3>
+                        <p>Out-of-the-box dashboards show Core Web Vitals trends, 75th percentile scores, and performance insights.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                        <h3 style="margin-bottom: 15px;">🔍 Deep Analysis</h3>
+                        <p>Correlate Core Web Vitals with user sessions, errors, and business metrics for complete visibility.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="https://docs.datadoghq.com/real_user_monitoring/" class="datadog-btn" target="_blank">
+                        Start Free Trial
+                    </a>
+                    <a href="https://docs.datadoghq.com/real_user_monitoring/browser/monitoring_page_performance/#event-timings-and-core-web-vitals" class="datadog-btn" target="_blank">
+                        View Documentation
+                    </a>
+                </div>
+            </div>
+
+            <h3 style="color: #4a5568; margin-top: 40px; margin-bottom: 20px;">Manual Implementation</h3>
+            <p>If you prefer to implement Core Web Vitals measurement manually, here are the key APIs:</p>
+            
+            <div class="measurement-code">
+<span class="code-comment">// Largest Contentful Paint</span>
+<span class="code-keyword">new</span> PerformanceObserver((entryList) => {
+  <span class="code-keyword">for</span> (<span class="code-keyword">const</span> entry <span class="code-keyword">of</span> entryList.getEntries()) {
+    console.log(<span class="code-string">'LCP:'</span>, entry.startTime, <span class="code-string">'ms'</span>);
+    <span class="code-comment">// entry.element gives you the LCP element</span>
+  }
+}).observe({type: <span class="code-string">'largest-contentful-paint'</span>, buffered: <span class="code-keyword">true</span>});
+
+<span class="code-comment">// Interaction to Next Paint</span>
+<span class="code-keyword">new</span> PerformanceObserver((entryList) => {
+  <span class="code-keyword">for</span> (<span class="code-keyword">const</span> entry <span class="code-keyword">of</span> entryList.getEntries()) {
+    console.log(<span class="code-string">'INP:'</span>, entry.duration, <span class="code-string">'ms'</span>);
+  }
+}).observe({type: <span class="code-string">'interaction'</span>, buffered: <span class="code-keyword">true</span>});
+
+<span class="code-comment">// Cumulative Layout Shift</span>
+<span class="code-keyword">let</span> clsValue = 0;
+<span class="code-keyword">new</span> PerformanceObserver((entryList) => {
+  <span class="code-keyword">for</span> (<span class="code-keyword">const</span> entry <span class="code-keyword">of</span> entryList.getEntries()) {
+    <span class="code-keyword">if</span> (!entry.hadRecentInput) {
+      clsValue += entry.value;
+      console.log(<span class="code-string">'CLS:'</span>, clsValue);
+    }
+  }
+}).observe({type: <span class="code-string">'layout-shift'</span>, buffered: <span class="code-keyword">true</span>});
+            </div>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3>🏷️ Field vs Lab Data</h3>
+                    <p>Use field data (real users) for business decisions and lab data (controlled testing) for development and debugging.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>📊 75th Percentile</h3>
+                    <p>Google recommends measuring at the 75th percentile to ensure good experience for most users, not just averages.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>📱 Segment by Device</h3>
+                    <p>Measure and optimize separately for mobile and desktop, as performance characteristics can vary significantly.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>🔄 Continuous Monitoring</h3>
+                    <p>Set up alerts and continuous monitoring to catch performance regressions before they impact users.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // FCP Animation
+        let fcpAnimationTimer;
+        let fcpStartTime;
+
+        function startFCPAnimation() {
+            resetFCPAnimation();
+            fcpStartTime = Date.now();
+            
+            // Update timer
+            fcpAnimationTimer = setInterval(() => {
+                const elapsed = (Date.now() - fcpStartTime) / 1000;
+                document.getElementById('fcpTimer').textContent = `Time: ${elapsed.toFixed(1)}s`;
+            }, 100);
+
+            // Animation sequence
+            const steps = [
+                { id: 'fcpStep0', delay: 0 },
+                { id: 'fcpStep1', delay: 200 },
+                { id: 'fcpStep2', delay: 600 },
+                { id: 'fcpStep3', delay: 900 },
+                { id: 'fcpStep4', delay: 1200, action: () => {
+                    document.getElementById('fcpHeader').classList.add('rendered');
+                    document.getElementById('fcpText1').classList.add('rendered');
+                    document.getElementById('fcpIndicator').classList.add('show');
+                }}
+            ];
+
+            executeSteps(steps, 'fcp');
+        }
+
+        function resetFCPAnimation() {
+            clearInterval(fcpAnimationTimer);
+            document.getElementById('fcpTimer').textContent = 'Time: 0.0s';
+            
+            // Reset timeline
+            for (let i = 0; i <= 4; i++) {
+                const item = document.getElementById(`fcpStep${i}`);
+                item.classList.remove('active', 'completed');
+            }
+
+            // Reset elements
+            ['fcpHeader', 'fcpText1', 'fcpText2', 'fcpImage'].forEach(id => {
+                document.getElementById(id).classList.remove('rendered');
+            });
+            document.getElementById('fcpIndicator').classList.remove('show');
+        }
+
+        // LCP Animation
+        let lcpAnimationTimer;
+        let lcpStartTime;
+
+        function startLCPAnimation() {
+            resetLCPAnimation();
+            lcpStartTime = Date.now();
+            
+            lcpAnimationTimer = setInterval(() => {
+                const elapsed = (Date.now() - lcpStartTime) / 1000;
+                document.getElementById('lcpTimer').textContent = `Time: ${elapsed.toFixed(1)}s`;
+            }, 100);
+
+            const steps = [
+                { id: 'lcpStep0', delay: 0 },
+                { id: 'lcpStep1', delay: 800, action: () => {
+                    document.getElementById('lcpHeader').classList.add('rendered');
+                    document.getElementById('lcpSmallText1').classList.add('rendered');
+                    document.getElementById('lcpSmallText2').classList.add('rendered');
+                }},
+                { id: 'lcpStep2', delay: 1500 },
+                { id: 'lcpStep3', delay: 2200, action: () => {
+                    document.getElementById('lcpHeroImage').classList.add('rendered');
+                    document.getElementById('lcpIndicator').classList.add('show');
+                }},
+                { id: 'lcpStep4', delay: 3000, action: () => {
+                    document.getElementById('lcpSmallImage').classList.add('rendered');
+                }}
+            ];
+
+            executeSteps(steps, 'lcp');
+        }
+
+        function resetLCPAnimation() {
+            clearInterval(lcpAnimationTimer);
+            document.getElementById('lcpTimer').textContent = 'Time: 0.0s';
+            
+            for (let i = 0; i <= 4; i++) {
+                const item = document.getElementById(`lcpStep${i}`);
+                item.classList.remove('active', 'completed');
+            }
+
+            ['lcpHeader', 'lcpSmallText1', 'lcpSmallText2', 'lcpHeroImage', 'lcpSmallImage'].forEach(id => {
+                document.getElementById(id).classList.remove('rendered');
+            });
+            document.getElementById('lcpIndicator').classList.remove('show');
+        }
+
+        // Helper function for step execution
+        function executeSteps(steps, prefix) {
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    const timelineItem = document.getElementById(step.id);
+                    timelineItem.classList.add('active');
+                    
+                    if (index > 0) {
+                        document.getElementById(steps[index-1].id).classList.remove('active');
+                        document.getElementById(steps[index-1].id).classList.add('completed');
+                    }
+
+                    if (step.action) {
+                        step.action();
+                    }
+
+                    // Final step cleanup
+                    if (index === steps.length - 1) {
+                        setTimeout(() => {
+                            timelineItem.classList.remove('active');
+                            timelineItem.classList.add('completed');
+                            if (prefix === 'fcp') clearInterval(fcpAnimationTimer);
+                            if (prefix === 'lcp') clearInterval(lcpAnimationTimer);
+                        }, 500);
+                    }
+                }, step.delay);
+            });
+        }
+
+        // INP Simulation
+        function simulateINP(delay, button) {
+            const startTime = performance.now();
+            button.classList.add('processing');
+            button.textContent = 'Processing...';
+
+            setTimeout(() => {
+                const endTime = performance.now();
+                const actualDelay = Math.round(endTime - startTime);
+                
+                button.classList.remove('processing');
+                button.textContent = button.textContent.replace('Processing...', `${actualDelay}ms`);
+                
+                // Update feedback
+                const feedback = document.getElementById('inpFeedback');
+                let quality = 'Good';
+                let color = '#48bb78';
+                
+                if (actualDelay > 200) {
+                    quality = actualDelay > 500 ? 'Poor' : 'Needs Improvement';
+                    color = actualDelay > 500 ? '#f56565' : '#ed8936';
+                }
+
+                feedback.innerHTML = `
+                    <strong>Response Time:</strong> ${actualDelay}ms<br>
+                    <strong>Quality:</strong> <span style="color: ${color}">${quality}</span><br>
+                    <strong>User Experience:</strong> ${getINPDescription(actualDelay)}
+                `;
+
+                document.getElementById('inpMeasurement').textContent = `${actualDelay}ms (${quality})`;
+                document.getElementById('inpMeasurement').style.color = color;
+
+                // Reset button text after 2 seconds
+                setTimeout(() => {
+                    if (button.textContent.includes('ms')) {
+                        button.textContent = button.textContent.split(' (')[0];
+                    }
+                }, 2000);
+            }, delay);
+        }
+
+        function getINPDescription(delay) {
+            if (delay <= 200) return 'Feels instant and responsive';
+            if (delay <= 500) return 'Noticeable delay but acceptable';
+            return 'Feels slow and unresponsive';
+        }
+
+        // CLS Demonstration
+        let clsScore = 0;
+
+        function demonstrateCLS() {
+            resetCLS();
+            
+            setTimeout(() => {
+                document.getElementById('clsAd').classList.add('show');
+                document.getElementById('clsShiftedText1').classList.add('shifted');
+                document.getElementById('clsShiftedText2').classList.add('shifted');
+                document.getElementById('clsShiftedText3').classList.add('shifted');
+                
+                // Simulate CLS score calculation
+                clsScore = 0.25; // Example score for demonstration
+                document.getElementById('clsScore').textContent = `CLS Score: ${clsScore} (Poor)`;
+                document.getElementById('clsScore').style.color = '#f56565';
+            }, 1000);
+        }
+
+        function resetCLS() {
+            document.getElementById('clsAd').classList.remove('show');
+            document.getElementById('clsShiftedText1').classList.remove('shifted');
+            document.getElementById('clsShiftedText2').classList.remove('shifted');
+            document.getElementById('clsShiftedText3').classList.remove('shifted');
+            
+            clsScore = 0;
+            document.getElementById('clsScore').textContent = 'CLS Score: 0.0';
+            document.getElementById('clsScore').style.color = '#48bb78';
+        }
+
+        // Auto-start first demo on page load
+        window.addEventListener('load', () => {
+            setTimeout(startFCPAnimation, 1000);
+        });
+    </script>
+</body>
+</html>

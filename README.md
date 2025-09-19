@@ -81,11 +81,26 @@ Simply open `index.html` in any modern web browser. No installation or setup req
 git clone <repository-url>
 cd core_web_vitals
 
-# Open in browser
+# Open directly in browser
 open index.html
-# or
-python -m http.server 8000  # Then visit http://localhost:8000
+
+# Or serve locally (recommended for development)
+python -m http.server 8000    # Python 3
+# Then visit http://localhost:8000
+
+# Alternative local servers
+npx http-server .             # If you have Node.js
+php -S localhost:8000         # If you have PHP
 ```
+
+### 🎯 Current Project Status
+
+This project is **actively maintained** and includes:
+- ✅ **Fully functional** Core Web Vitals demonstrations
+- ✅ **Mobile-responsive** design with enhanced accessibility
+- ✅ **Interactive visualizations** for all four core metrics
+- ✅ **Educational content** with optimization tips and code examples
+- ✅ **Automated UI improvement workflow** via specialized agents
 
 ## 🎯 Target Audience
 
@@ -102,9 +117,61 @@ Works in all modern browsers that support:
 - ES6 JavaScript features
 - CSS animations and transitions
 
+## 🤖 Automated UI Improvement Workflow
+
+This project includes an intelligent system for continuous UI/UX improvements using specialized AI agents:
+
+### 🔧 Agent-Powered Development
+
+The project uses **Claude Code** with specialized sub-agents for automated UI analysis and improvements:
+
+1. **ui-analyzer-playwright**: Captures screenshots and analyzes the current UI state
+2. **ui-improvement-implementer**: Implements suggested improvements while maintaining functionality
+
+### 🎛️ Orchestrated Workflow
+
+The agents work together automatically through instructions in `CLAUDE.md`:
+
+```bash
+# Single command triggers both agents
+"Analyze and improve the UI"
+"Update the interface design"
+"Run UI analysis and implement suggestions"
+```
+
+**What happens automatically:**
+1. 📸 **Screenshot Capture**: Playwright agent navigates and captures current UI state
+2. 🔍 **UI Analysis**: Comprehensive analysis of design, accessibility, and user experience
+3. 📝 **Documentation**: Findings saved to `ui-suggestions.json` with priority levels
+4. ⚡ **Implementation**: Improvement agent applies high-priority enhancements
+5. ✅ **Testing**: Automated verification that all functionality remains intact
+
+### 🎯 Agent Guidelines
+
+**Analyzer Focus:**
+- Educational effectiveness and user experience
+- Accessibility compliance (WCAG AA)
+- Mobile responsiveness optimization
+- Performance impact assessment
+
+**Implementer Focus:**
+- Maintains single-file architecture
+- Preserves all interactive demonstrations
+- Follows established purple gradient theme
+- Ensures educational content remains accurate
+
 ## 🤝 Contributing
 
 This project serves as an educational tool for the web development community. Contributions that improve the educational value, accessibility, or visual appeal are welcome.
+
+### 🛠️ Development Workflow
+
+When working on this project:
+1. All changes go in the single `index.html` file
+2. Use the automated agent workflow for UI improvements
+3. Test interactive features on multiple device sizes
+4. Verify Core Web Vitals thresholds remain accurate
+5. Maintain educational focus and performance optimization
 
 ## 📄 License
 

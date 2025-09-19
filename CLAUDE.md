@@ -82,3 +82,47 @@ Each metric section includes:
 - Code examples for measurement
 
 The project serves as both a learning tool and a reference implementation for web performance education.
+
+## Automated UI Analysis and Improvement Workflow
+
+This project includes specialized agents for UI analysis and improvement that can work together automatically:
+
+### Agent Orchestration
+
+When the user requests UI analysis or improvements, Claude should automatically:
+
+1. **First, run ui-analyzer-playwright agent** to:
+   - Navigate to and screenshot the application
+   - Analyze current UI state and user experience
+   - Document specific improvement suggestions in ui-suggestions.json
+   - Provide comprehensive feedback on design, accessibility, and usability
+
+2. **Then, run ui-improvement-implementer agent** to:
+   - Review the suggestions from ui-suggestions.json
+   - Implement high-priority improvements (spacing, accessibility, responsiveness)
+   - Apply medium-priority enhancements where feasible
+   - Maintain the single-file architecture and educational focus
+
+### Automated Commands
+
+Users can trigger the complete workflow with commands like:
+- "Analyze and improve the UI"
+- "Run UI analysis and implement suggestions"
+- "Update the interface design"
+
+### Agent Guidelines
+
+**For ui-analyzer-playwright:**
+- Focus on educational effectiveness and user experience
+- Prioritize accessibility and mobile responsiveness
+- Consider the application's teaching goals when making suggestions
+- Document all findings in ui-suggestions.json with priority levels
+
+**For ui-improvement-implementer:**
+- Always check ui-suggestions.json first for documented improvements
+- Maintain the purple gradient theme and educational focus
+- Preserve all interactive demonstrations and Core Web Vitals functionality
+- Test that tab navigation and animations continue to work
+- Keep changes within the single HTML file structure
+
+This workflow ensures consistent UI improvements while maintaining the application's educational mission and technical architecture.

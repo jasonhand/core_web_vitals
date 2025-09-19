@@ -65,6 +65,26 @@ This project provides a comprehensive, interactive learning experience for under
 3. **INP Testing**: Click buttons with different response times to feel the difference
 4. **CLS Demonstration**: Experience how unexpected layout shifts impact user experience
 
+## 📷 Screenshots
+
+### Overview Page
+![Core Web Vitals Overview](.playwright-mcp/overview-page.png)
+
+### First Contentful Paint (FCP)
+![First Contentful Paint Demo](.playwright-mcp/fcp-page.png)
+
+### Largest Contentful Paint (LCP)
+![Largest Contentful Paint Demo](.playwright-mcp/lcp-page.png)
+
+### Interaction to Next Paint (INP)
+![Interaction to Next Paint Demo](.playwright-mcp/inp-page.png)
+
+### Cumulative Layout Shift (CLS)
+![Cumulative Layout Shift Demo](.playwright-mcp/cls-page.png)
+
+### Monitoring & Implementation
+![Monitoring and Implementation Guide](.playwright-mcp/monitoring-page.png)
+
 ## 📖 Educational Content
 
 - **Performance Thresholds**: Clear good/needs improvement/poor scoring

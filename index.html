@@ -9,21 +9,30 @@
         type="text/javascript">
     </script>
     <script>
-        window.DD_RUM && window.DD_RUM.init({
-          clientToken: 'pubd1ff9f860a972e6fa8d2bff2969707e5',
-          applicationId: 'a0599899-77c2-4690-86d0-7f98fccd21fa',
-          // `site` refers to the Datadog site parameter of your organization
-          // see https://docs.datadoghq.com/getting_started/site/
-          site: 'datadoghq.com',
-          service: 'core-web-vitals',
-          env: 'github-pages',
-          // Specify a version number to identify the deployed version of your application in Datadog
-          // version: '1.0.0',
-          sessionSampleRate: 100,
-          sessionReplaySampleRate: 100,
-          trackBfcacheViews: true,
-          defaultPrivacyLevel: 'mask-user-input',
-        });
+        // Only initialize Datadog RUM if cookies are accepted
+        function initializeDatadog() {
+            window.DD_RUM && window.DD_RUM.init({
+              clientToken: 'pubd1ff9f860a972e6fa8d2bff2969707e5',
+              applicationId: 'a0599899-77c2-4690-86d0-7f98fccd21fa',
+              // `site` refers to the Datadog site parameter of your organization
+              // see https://docs.datadoghq.com/getting_started/site/
+              site: 'datadoghq.com',
+              service: 'core-web-vitals',
+              env: 'github-pages',
+              // Specify a version number to identify the deployed version of your application in Datadog
+              // version: '1.0.0',
+              sessionSampleRate: 100,
+              sessionReplaySampleRate: 100,
+              trackBfcacheViews: true,
+              defaultPrivacyLevel: 'mask-user-input',
+            });
+        }
+
+        // Check if user has already made a cookie choice
+        const cookieConsent = localStorage.getItem('cookieConsent');
+        if (cookieConsent === 'accepted') {
+            initializeDatadog();
+        }
     </script>
     <style>
         * {
@@ -820,6 +829,135 @@
         .skip-nav:focus {
             top: 6px;
         }
+
+        /* Cookie Banner */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a202c;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            display: none;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .cookie-banner.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cookie-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .cookie-text h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .cookie-text p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .cookie-text a {
+            color: #90caf9;
+            text-decoration: underline;
+        }
+
+        .cookie-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .cookie-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .cookie-btn-accept {
+            background: #48bb78;
+            color: white;
+        }
+
+        .cookie-btn-accept:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .cookie-btn-decline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cookie-btn-decline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .cookie-btn:focus {
+            outline: 3px solid #ffd700;
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .cookie-banner {
+                padding: 20px 15px;
+            }
+
+            .cookie-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cookie-text {
+                min-width: 100%;
+            }
+
+            .cookie-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+
+            .cookie-btn {
+                flex: 1;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1245,6 +1383,29 @@ onCLS(sendToAnalytics);
     </main>
     </div>
 
+    <!-- Cookie Consent Banner -->
+    <div class="cookie-banner" id="cookieBanner" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieDesc">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h3 id="cookieTitle">We Value Your Privacy</h3>
+                <p id="cookieDesc">
+                    This website uses cookies and analytics to improve your experience and measure performance metrics.
+                    By clicking "Accept", you consent to our use of cookies and analytics tools like Datadog RUM.
+                    Your data will help us understand and improve Core Web Vitals performance.
+                    <a href="https://docs.datadoghq.com/real_user_monitoring/guide/gdpr-compliance/" target="_blank" rel="noopener noreferrer">Learn more</a>
+                </p>
+            </div>
+            <div class="cookie-actions">
+                <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()" aria-label="Accept cookies and analytics">
+                    Accept
+                </button>
+                <button class="cookie-btn cookie-btn-decline" onclick="declineCookies()" aria-label="Decline cookies and analytics">
+                    Decline
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Tab Management
         function showTab(tabName, clickedTab) {
@@ -1498,6 +1659,39 @@ onCLS(sendToAnalytics);
         // Auto-start first demo on page load
         window.addEventListener('load', () => {
             setTimeout(startFCPAnimation, 1000);
+        });
+
+        // Cookie Consent Management
+        function showCookieBanner() {
+            const banner = document.getElementById('cookieBanner');
+            banner.classList.add('show');
+        }
+
+        function hideCookieBanner() {
+            const banner = document.getElementById('cookieBanner');
+            banner.classList.remove('show');
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookieConsent', 'accepted');
+            hideCookieBanner();
+            // Initialize Datadog RUM now that consent is given
+            initializeDatadog();
+        }
+
+        function declineCookies() {
+            localStorage.setItem('cookieConsent', 'declined');
+            hideCookieBanner();
+            // Do not initialize Datadog RUM
+        }
+
+        // Check if user needs to see the banner on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const cookieConsent = localStorage.getItem('cookieConsent');
+            if (!cookieConsent) {
+                // Show banner after a short delay for better UX
+                setTimeout(showCookieBanner, 500);
+            }
         });
     </script>
 </body>
